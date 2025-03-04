@@ -103,12 +103,31 @@ def backward_selection(data):
 
 if __name__ == "__main__":
     # Load dataset (assuming first column is class labels, rest are features)
-    data = np.loadtxt('CS170_Large_Data__118.txt')
+    print("Welcome to Keerthi Singam's Feature Selection Algorithm.")
 
-    print("\n===== Forward Selection (Stub Version) =====")
-    best_forward_features, forward_accuracy = forward_selection(data)
-    print(f"Best feature set (Forward Selection): {best_forward_features}, Accuracy: {forward_accuracy:.4f}")
+    # Prompt user for file name
+    file_name = input("Type in the name of the file to test: ")
+    
+    try:
+        data = np.loadtxt(file_name)
+    except Exception as e:
+        print(f"Error loading file: {e}")
+        exit()
 
-    print("\n===== Backward Selection (Stub Version) =====")
-    best_backward_features, backward_accuracy = backward_selection(data)
-    print(f"Best feature set (Backward Selection): {best_backward_features}, Accuracy: {backward_accuracy:.4f}")
+    # Prompt user for algorithm choice
+    print("\nType the number of the algorithm you want to run.")
+    print("1) Forward Selection")
+    print("2) Backward Elimination")
+
+    choice = input("\nEnter your choice (1 or 2): ")
+
+    if choice == "1":
+        print("\n===== Running Forward Selection =====")
+        best_features, accuracy = forward_selection(data)
+        print(f"\nBest feature set (Forward Selection): {best_features}, Accuracy: {accuracy:.4f}")
+    elif choice == "2":
+        print("\n===== Running Backward Elimination =====")
+        best_features, accuracy = backward_selection(data)
+        print(f"\nBest feature set (Backward Elimination): {best_features}, Accuracy: {accuracy:.4f}")
+    else:
+        print("Invalid choice. Please restart and select either 1 or 2.")

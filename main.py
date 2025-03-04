@@ -3,7 +3,6 @@ import numpy as np
 def leave_one_out_cross_validation(data,feature_set,feature_to_add=None):
 
     selected_features = list(feature_set)
-
     number_correctly_classified = 0
     n = data.shape[0]
 
@@ -37,6 +36,9 @@ def forward_selection(data):
     current_set = []
     best_overall_accuracy = 0
     best_feature_set = []
+
+    base_accuracy = leave_one_out_cross_validation(data, current_set,None)
+    print(f"Base accuracy with no features: {base_accuracy:.4f}")
 
     for i in range(num_features):
         print(f"\nOn level {i+1} of the search tree")
@@ -72,6 +74,9 @@ def backward_selection(data):
     current_set = list(range(1, num_features + 1))  # Start with all features
     best_overall_accuracy = 0
     best_feature_set = list(current_set)
+
+    base_accuracy = leave_one_out_cross_validation(data, current_set,None)
+    print(f"Base accuracy with no features: {base_accuracy:.4f}")
 
     for i in range(num_features - 1):
         print(f"\nOn level {i+1} of the search tree")

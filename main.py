@@ -31,21 +31,22 @@ def forward_selection(data):
 
     base_accuracy = leave_one_out_cross_validation(data, current_set, None)
     print(f"Base accuracy with no features: {base_accuracy:.4f}")
+    best_overall_accuracy = base_accuracy
 
     for i in range(num_features):
         print(f"\nOn level {i+1} of the search tree")
         best_feature = None
         best_accuracy = 0
 
-        available_features = set(range(1, num_features + 1)) - set(current_set) #added for optimization
+        for feature in range(1, num_features + 1): #looping through all features not including already selected ones
+            if feature not in current_set:
+                accuracy = leave_one_out_cross_validation(data, current_set + [feature],feature)  # Stub function
+                print(f"Testing feature set {current_set + [feature]}, Accuracy: {accuracy:.4f}") #printing rn with random accuracy for every feature set
 
-        for feature in available_features:
-            accuracy = leave_one_out_cross_validation(data, current_set + [feature], feature)
-            print(f"Testing feature set {current_set + [feature]}, Accuracy: {accuracy:.4f}")
+                if accuracy > best_accuracy:
+                    best_accuracy = accuracy
+                    best_feature = feature
 
-            if accuracy > best_accuracy:
-                best_accuracy = accuracy
-                best_feature = feature
 
         if best_feature:
             current_set.append(best_feature)
@@ -69,6 +70,7 @@ def backward_selection(data):
 
     base_accuracy = leave_one_out_cross_validation(data, current_set,None)
     print(f"Base accuracy with all features: {base_accuracy:.4f}")
+    best_overall_accuracy = base_accuracy
 
     for i in range(num_features - 1):
         print(f"\nOn level {i+1} of the search tree")

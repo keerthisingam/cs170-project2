@@ -72,7 +72,7 @@ def backward_selection(data):
     print(f"Base accuracy with all features: {base_accuracy:.4f}")
     best_overall_accuracy = base_accuracy
 
-    for i in range(num_features - 1):
+    for i in range(num_features):
         print(f"\nOn level {i+1} of the search tree")
         worst_feature = None  #tracks the worst feature to remove in this iteration
         best_accuracy = 0  #stores the highest accuracy found in this iteration
@@ -95,6 +95,14 @@ def backward_selection(data):
                 best_feature_set = list(current_set)
             else:
                 print(f"\nWarning! Accuracy has decreased! Continuing search in case of local maxima")
+
+    #evaluates the empty set after the loop
+    empty_set_accuracy = leave_one_out_cross_validation(data, [], None)
+    print(f"\nAccuracy with empty feature set: {empty_set_accuracy:.4f}")
+
+    if empty_set_accuracy > best_overall_accuracy:
+        best_overall_accuracy = empty_set_accuracy
+        best_feature_set = []
 
     return best_feature_set, best_overall_accuracy
 

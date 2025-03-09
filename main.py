@@ -1,21 +1,23 @@
 import numpy as np
+import time
 
 def leave_one_out_cross_validation(data, feature_set, feature_to_add=None):
     selected_features = list(feature_set)  
     number_correctly_classified = 0
     n = data.shape[0]
 
-    feature_matrix = data[:, selected_features]  
+    feature_matrix = data[:, selected_features]  #extracts selected feature columns
 
     for i in range(n):
         label_to_classify = data[i, 0]
         instance_features = feature_matrix[i]
 
+        #computes Euclidean distances from the current sample to all others
         distances = np.sqrt(np.sum((feature_matrix - instance_features) ** 2, axis=1))  
         distances[i] = np.inf  
 
         nearest_neighbor_index = np.argmin(distances)  
-        nearest_neighbor_label = data[nearest_neighbor_index, 0]  
+        nearest_neighbor_label = data[nearest_neighbor_index, 0]  #gets the label of the nearest neighbor
 
         if label_to_classify == nearest_neighbor_label:
             number_correctly_classified += 1
@@ -24,7 +26,7 @@ def leave_one_out_cross_validation(data, feature_set, feature_to_add=None):
     return accuracy
 
 def forward_selection(data):
-    num_features = data.shape[1] - 1  # Exclude label column
+    num_features = data.shape[1] - 1  #excludes label column
     current_set = []
     best_overall_accuracy = 0
     best_feature_set = []
@@ -40,8 +42,8 @@ def forward_selection(data):
 
         for feature in range(1, num_features + 1): #looping through all features not including already selected ones
             if feature not in current_set:
-                accuracy = leave_one_out_cross_validation(data, current_set + [feature],feature)  # Stub function
-                print(f"Testing feature set {current_set + [feature]}, Accuracy: {accuracy:.4f}") #printing rn with random accuracy for every feature set
+                accuracy = leave_one_out_cross_validation(data, current_set + [feature],feature) 
+                print(f"Testing feature set {current_set + [feature]}, Accuracy: {accuracy:.4f}") 
 
                 if accuracy > best_accuracy:
                     best_accuracy = accuracy
@@ -63,7 +65,7 @@ def forward_selection(data):
 def backward_selection(data):
     """ Performs backward selection to find the best feature subset. Uses a stubbed cross-validation function (random accuracy). """
     
-    num_features = data.shape[1] - 1  # Exclude label column
+    num_features = data.shape[1] - 1  #exclude label column
     current_set = list(range(1, num_features + 1))  #starts with all features
     best_overall_accuracy = 0
     best_feature_set = list(current_set)
@@ -79,8 +81,8 @@ def backward_selection(data):
 
         for feature in current_set:
             temp_set = [f for f in current_set if f != feature]  #removes one feature at a time
-            accuracy = leave_one_out_cross_validation(data, temp_set,feature)  # Stub function
-            print(f"Testing feature set {temp_set}, Accuracy: {accuracy:.4f}")  # Printing rn with random accuracy for every feature set
+            accuracy = leave_one_out_cross_validation(data, temp_set,feature) 
+            print(f"Testing feature set {temp_set}, Accuracy: {accuracy:.4f}") 
 
             if accuracy > best_accuracy:
                 best_accuracy = accuracy
@@ -127,11 +129,23 @@ if __name__ == "__main__":
 
     if choice == "1":
         print("\n===== Running Forward Selection =====")
+        start_time = time.time()  #start timer
         best_features, accuracy = forward_selection(data)
+        end_time = time.time()  #end timer
+
+        elapsed_time = end_time - start_time  #calculates elapsed time
         print(f"\nBest feature set (Forward Selection): {best_features}, Accuracy: {accuracy:.4f}")
+        print(f"Time taken: {elapsed_time:.4f} seconds")
+
     elif choice == "2":
         print("\n===== Running Backward Elimination =====")
+        start_time = time.time()  #start timer
         best_features, accuracy = backward_selection(data)
+        end_time = time.time()  #end timer
+
+        elapsed_time = end_time - start_time  #calculate elapsed time
         print(f"\nBest feature set (Backward Elimination): {best_features}, Accuracy: {accuracy:.4f}")
+        print(f"Time taken: {elapsed_time:.4f} seconds")
+
     else:
         print("Invalid choice. Please restart and select either 1 or 2.")

@@ -31,8 +31,9 @@ def forward_selection(data):
     best_overall_accuracy = 0
     best_feature_set = []
 
+
     base_accuracy = leave_one_out_cross_validation(data, current_set, None)
-    print(f"Base accuracy with no features: {base_accuracy:.4f}")
+    print(f"Base accuracy with no features: {base_accuracy * 100:.1f}%")
     best_overall_accuracy = base_accuracy
 
     for i in range(num_features):
@@ -43,7 +44,7 @@ def forward_selection(data):
         for feature in range(1, num_features + 1): #looping through all features not including already selected ones
             if feature not in current_set:
                 accuracy = leave_one_out_cross_validation(data, current_set + [feature],feature) 
-                print(f"Testing feature set {current_set + [feature]}, Accuracy: {accuracy:.4f}") 
+                print(f"  Using feature(s) {current_set + [feature]} accuracy is {accuracy * 100:.1f}%") 
 
                 if accuracy > best_accuracy:
                     best_accuracy = accuracy
@@ -52,7 +53,7 @@ def forward_selection(data):
 
         if best_feature:
             current_set.append(best_feature)
-            print(f"Feature {best_feature} added, new set: {current_set}, Accuracy: {best_accuracy:.4f}")
+            print(f"Feature {best_feature} added, current best feature set: {current_set} accuracy is {best_accuracy * 100:.1f}%")
 
             if best_accuracy > best_overall_accuracy:
                 best_overall_accuracy = best_accuracy
@@ -71,7 +72,7 @@ def backward_selection(data):
     best_feature_set = list(current_set)
 
     base_accuracy = leave_one_out_cross_validation(data, current_set,None)
-    print(f"Base accuracy with all features: {base_accuracy:.4f}")
+    print(f"Base accuracy with all features: {base_accuracy * 100:.1f}%")
     best_overall_accuracy = base_accuracy
 
     for i in range(num_features):
@@ -82,7 +83,7 @@ def backward_selection(data):
         for feature in current_set:
             temp_set = [f for f in current_set if f != feature]  #removes one feature at a time
             accuracy = leave_one_out_cross_validation(data, temp_set,feature) 
-            print(f"Testing feature set {temp_set}, Accuracy: {accuracy:.4f}") 
+            print(f"  Using feature(s) {temp_set} accuracy is {accuracy * 100:.1f}%") 
 
             if accuracy > best_accuracy:
                 best_accuracy = accuracy
@@ -90,7 +91,7 @@ def backward_selection(data):
 
         if worst_feature is not None:
             current_set.remove(worst_feature)
-            print(f"Feature {worst_feature} removed, new set: {current_set}, Accuracy: {best_accuracy:.4f}")
+            print(f"Feature {worst_feature} removed, current best feature set: {current_set} accuracy is {best_accuracy * 100:.1f}%")
 
             if best_accuracy > best_overall_accuracy:
                 best_overall_accuracy = best_accuracy
@@ -100,7 +101,7 @@ def backward_selection(data):
 
     #evaluates the empty set after the loop
     empty_set_accuracy = leave_one_out_cross_validation(data, [], None)
-    print(f"\nAccuracy with empty feature set: {empty_set_accuracy:.4f}")
+    print(f"  Using feature(s) {{}} accuracy is {empty_set_accuracy * 100:.1f}%")
 
     if empty_set_accuracy > best_overall_accuracy:
         best_overall_accuracy = empty_set_accuracy
@@ -128,24 +129,24 @@ if __name__ == "__main__":
     choice = input("\nEnter your choice (1 or 2): ")
 
     if choice == "1":
-        print("\n===== Running Forward Selection =====")
+        print("\nBeginning search.")
         start_time = time.time()  #start timer
         best_features, accuracy = forward_selection(data)
         end_time = time.time()  #end timer
 
         elapsed_time = end_time - start_time  #calculates elapsed time
-        print(f"\nBest feature set (Forward Selection): {best_features}, Accuracy: {accuracy:.4f}")
-        print(f"Time taken: {elapsed_time:.4f} seconds")
+        print(f"\nBest feature set: {best_features}, Accuracy: {accuracy * 100:.1f}%")
+        print(f"Time taken: {end_time - start_time:.2f} seconds")
 
     elif choice == "2":
-        print("\n===== Running Backward Elimination =====")
+        print("\nBeginning search.")
         start_time = time.time()  #start timer
         best_features, accuracy = backward_selection(data)
         end_time = time.time()  #end timer
 
         elapsed_time = end_time - start_time  #calculate elapsed time
-        print(f"\nBest feature set (Backward Elimination): {best_features}, Accuracy: {accuracy:.4f}")
-        print(f"Time taken: {elapsed_time:.4f} seconds")
+        print(f"\nBest feature set: {best_features}, Accuracy: {accuracy * 100:.1f}%")
+        print(f"Time taken: {end_time - start_time:.2f} seconds")
 
     else:
         print("Invalid choice. Please restart and select either 1 or 2.")

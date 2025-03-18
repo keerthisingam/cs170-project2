@@ -12,10 +12,12 @@ def leave_one_out_cross_validation(data, feature_set, feature_to_add=None):
         label_to_classify = data[i, 0]
         instance_features = feature_matrix[i]
 
-        #computes Euclidean distances from the current sample to all others
+        #computes Euclidean distances from the current sample to all others 
+        #links i used :https://www.geeksforgeeks.org/numpy-sqrt-in-python/, https://www.geeksforgeeks.org/numpy-sum-in-python/
         distances = np.sqrt(np.sum((feature_matrix - instance_features) ** 2, axis=1))  
         distances[i] = np.inf  
 
+        #link i used: https://www.geeksforgeeks.org/numpy-argmin-python/?ref=ml_lbp
         nearest_neighbor_index = np.argmin(distances)  
         nearest_neighbor_label = data[nearest_neighbor_index, 0]  #gets the label of the nearest neighbor
 

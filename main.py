@@ -1,5 +1,26 @@
 import numpy as np
+import os
+import pandas as pd
 import time
+
+#for extra credit to read in .csv and .txt files
+#links used: https://www.geeksforgeeks.org/python-os-path-splitext-method/
+def load_data(file_name):
+    file_extension = os.path.splitext(file_name)[1].lower()  
+    
+    try:
+        if file_extension == ".csv":
+            df = pd.read_csv(file_name, header=None)  
+            data = df.to_numpy()  
+        elif file_extension == ".txt":
+            data = np.loadtxt(file_name)  
+        else:
+            raise ValueError("Unsupported file format. Please use .txt or .csv")
+        
+        return data
+    except Exception as e:
+        print(f"Error loading file: {e}")
+        exit()
 
 def leave_one_out_cross_validation(data, feature_set, feature_to_add=None):
     selected_features = list(feature_set)  
@@ -118,7 +139,7 @@ if __name__ == "__main__":
     file_name = input("Type in the name of the file to test: ")
     
     try:
-        data = np.loadtxt(file_name)
+        data = load_data(file_name) 
     except Exception as e:
         print(f"Error loading file: {e}")
         exit()
